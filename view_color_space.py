@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 '''
-    Visualiza o espaço de cores da imagem gerada dawd
+    Visualiza o espaço de cores da imagem gerada
 '''
 img = mpimg.imread("output_image.png", "png")
 plt.imshow(img)

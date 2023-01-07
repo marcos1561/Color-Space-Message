@@ -16,7 +16,7 @@ in_image = mpimg.imread("input_image.png")
 
         x (Vermelho): Coluna do pixel da imagem de entrada normalizada.
         y (Verde): Valor arbitrário decidido pelo programador.
-        z (Azul): Linhha do pixel da imagem de entrada normalizada.
+        z (Azul): Linha do pixel da imagem de entrada normalizada.
 
     Os pontos são armazenados na lista "pointsCS", de tal forma que a coordenada do n-ésimo ponto é (pointsCS[0][n], pointsCS[1][n], pointsCS[2][n])
 
@@ -33,18 +33,38 @@ for i in range(num_lin):
 
 
 ### Arbitrariamente atribui os valores da coordenada y normalizada
+angle = np.radians(45)
+z_rotation = np.array([
+    [np.cos(angle), -np.sin(angle), 0],
+    [np.sin(angle), np.cos(angle), 0],
+    [0, 0, 1]
+    ])
+
 num_points = len(pointsCS[0])
-points_y = []
-for i in range(num_points):
-    points_y.append(0.5  +  0.01 * np.sin(2*np.pi * pointsCS[0][i]))
-pointsCS[1] = points_y
-# color_coords[1] = list(0.3 + 0 * np.random.random_sample(num_colors)*np.random.choice([-1, 1], num_colors))
+pointsCS[1] = [0 for _ in range(num_points)]
+points = np.array([pointsCS[0], pointsCS[1], pointsCS[2]])
+
+points[0] -= 0.5
+
+points = z_rotation.dot(points)
+
+points[0] += 0.5
+points[1] += 0.5
+
+pointsCS = points
+
+# num_points = len(pointsCS[0])
+# points_y = []
+# for i in range(num_points):
+#     points_y.append(0.5  +  0.01 * np.sin(2*np.pi * pointsCS[0][i]))
+# pointsCS[1] = points_y
+# # color_coords[1] = list(0.3 + 0 * np.random.random_sample(num_colors)*np.random.choice([-1, 1], num_colors))
 
 ### pointsCS é convertido para um np-array para facilitar o forma de obter a sua transposta.
 pointsCS = np.array(pointsCS) 
 
 '''
-    Configuraçõoes para vizualizar o gráfico dos pontos criados.
+    Configurações para visualizar o gráfico dos pontos criados.
 '''
 fig = plt.figure()
 ax = fig.add_subplot(projection='3d')
@@ -72,7 +92,7 @@ remaing_px = out_image[np.random.randint(0, num_points, img_size - num_points)]
 ### Formatando os dados para ficarem na forma de uma imagem RGB.
 out_image = np.concatenate((out_image, remaing_px)).reshape(img_width, img_width, 3) 
 
-### Visualizando a imegem de saída criada
+### Visualizando a imagem de saída criada
 fig_coded, ax_coded = plt.subplots()
 ax_coded.imshow(out_image)
 
